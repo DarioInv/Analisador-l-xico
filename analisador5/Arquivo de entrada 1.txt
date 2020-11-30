@@ -2,7 +2,7 @@ num: val, i, resultado
 
 resultado = 0
 
-print "Digite um numero: "
+print "Digite um número: "
 read val
 
 for i = 2 to (val / 2) step 1
@@ -15,9 +15,9 @@ for i = 2 to (val / 2) step 1
 
 if resultado = 0
 {
-   print "O" + val + " e um numero primo"
+   print "O" + val + "é um número primo"
 }
 else
 {
-   print "O" + val + " NAO é um numero primo"
+   print "O" + val + "NÃO é um número primo"
 }

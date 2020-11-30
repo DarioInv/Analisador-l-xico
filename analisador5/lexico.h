@@ -3,12 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 using namespace std;
+char aux[3][20];
+char buffer[10]={0};
+int i, j, palavraErro = 0;
 
 int automatos(int &partida)
 {
-switch (partida)
+	switch (partida)
 	{
 	case 0:
 		return 3;
@@ -65,11 +69,13 @@ switch (partida)
 	case 85:
 		return 89;
 	case 89:
-		return 91;
-	case 91:
-		return 92;
-	default:
 		return 93;
+	case 93:
+		return 99;
+	case 99:
+		return 100;
+	default:
+		return 101;
 	}
 }
 
@@ -80,6 +86,7 @@ token ProximoToken()
 	int estado = 0;
 	int partida = 0;
 	int pos = 0;
+	setlocale(LC_ALL, "portuguese");
 
 	for (p = 0; p < 100; p++)
 	{
@@ -791,7 +798,7 @@ token ProximoToken()
 		// ,
 		case 76:
 			c = ProximoCaracter();
-			if (c == ',' )
+			if (c == ',')
 				estado = 77;
 			else
 			{
@@ -910,12 +917,30 @@ token ProximoToken()
 			for (p = iniLexema; p < fimLexema; p++)
 			{
 				t.valor[pos] = vetor[p];
+				buffer[pos] = vetor[p];
 				pos++;
 			}
+			if (i < 3)
+			{
+				strcpy(aux[i],buffer);
+				for(j=0;j<10;j++){
+					buffer[j] = 0;
+				}
+				i++;
+			}
+			// if(i=3){
+			// 	for(j=0;j<3;j++){
+			// 		if(strcmp(aux[j],buffer)==0){
+			// 			palavraErro = 0;
+			// 		}else{
+			// 			palavraErro = 1;
+			// 		}
+			// 	}
+			// }
 			t.pLinha = linha;
 			iniLexema = fimLexema;
 			return t;
-		//aspas
+		//tratamento das aspas
 		case 89:
 			c = ProximoCaracter();
 			if (c == '"')
@@ -926,35 +951,113 @@ token ProximoToken()
 				estado = partida = automatos(partida);
 			}
 			break;
-        case 90:
+		case 90:
+			c = ProximoCaracter();
+			if (c == '"' && vetor[iniLexema] == '"')
+			{
+				estado = 91;
+			}
+			if (c == '\n' && vetor[iniLexema] == '"')
+			{
+				estado = 92;
+			}
+			if (c != '"' && vetor[iniLexema] != '"')
+			{
+				estado = 90;
+			}
+			break;
+		case 91:
 			t.classe = 27;
 			strcpy(t.valor, "ASPAS");
 			t.pLinha = linha;
 			iniLexema = fimLexema;
 			return t;
-		// final
-		case 91:
+		case 92:
+			t.classe = 28;
+			strcpy(t.valor, "ASPAS");
+			t.pLinha = linha;
+			iniLexema = fimLexema;
+			return t;
+		// break
+		case 93:
 			c = ProximoCaracter();
-			if (c == '\0')
-				estado = 92;
+			if (c == 'b')
+				estado = 94;
 			else
 			{
 				fimLexema = iniLexema;
 				estado = partida = automatos(partida);
 			}
 			break;
-		case 92:
-			t.classe = 28;
+		case 94:
+			c = ProximoCaracter();
+			if (c == 'r')
+				estado = 95;
+			else
+			{
+				fimLexema = iniLexema;
+				estado = partida = automatos(partida);
+			}
+			break;
+		case 95:
+			c = ProximoCaracter();
+			if (c == 'e')
+				estado = 96;
+			else
+			{
+				fimLexema = iniLexema;
+				estado = partida = automatos(partida);
+			}
+			break;
+		case 96:
+			c = ProximoCaracter();
+			if (c == 'a')
+				estado = 97;
+			else
+			{
+				fimLexema = iniLexema;
+				estado = partida = automatos(partida);
+			}
+			break;
+		case 97:
+			c = ProximoCaracter();
+			if ((c == 'k') && (!islower(vetor[fimLexema])) && (!isupper(vetor[fimLexema])))
+				estado = 98;
+			else
+			{
+				fimLexema = iniLexema;
+				estado = partida = automatos(partida);
+			}
+			break;
+		case 98:
+			t.classe = 29;
+			strcpy(t.valor, "break");
+			t.pLinha = linha;
+			iniLexema = fimLexema;
+			return t;
+		// final
+		case 99:
+			c = ProximoCaracter();
+			if (c == '\0')
+				estado = 94;
+			else
+			{
+				fimLexema = iniLexema;
+				estado = partida = automatos(partida);
+			}
+			break;
+		case 100:
+			t.classe = 30;
 			strcpy(t.valor, "FIM");
 			t.pLinha = linha;
 			iniLexema = fimLexema;
 			return t;
-		
+
 		// erro
-		case 93:
+		case 101:
 			fimLexema++;
 
-			t.classe = 29;
+			t.classe = 31;
 			for (p = iniLexema; p < fimLexema; p++)
 			{
 				t.valor[pos] = vetor[p];
