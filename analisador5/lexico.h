@@ -7,8 +7,30 @@
 
 using namespace std;
 char aux[3][20];
-char buffer[10]={0};
-int i, j, palavraErro = 0;
+char buffer[10] = {0};
+int i, j = 0;
+void imprimir(int tipoErro, char vetorErro[100], int linhaErro);
+int erro2;
+
+int testarPalavra(char buffer[])
+{
+	int flag = 0;
+	for (j = 0; j < 3; j++)
+	{
+		if (strcmp(aux[j], buffer) == 0)
+		{
+			flag = 1;
+			break;
+		}else if(strcmp(buffer,"break")==0){
+			flag = 1;
+			break;
+		}else if(strcmp(buffer,"if")==0){
+			flag = 1;
+			break;
+		}
+	}
+	return flag;
+}
 
 int automatos(int &partida)
 {
@@ -922,23 +944,29 @@ token ProximoToken()
 			}
 			if (i < 3)
 			{
-				strcpy(aux[i],buffer);
-				for(j=0;j<10;j++){
+				strcpy(aux[i], buffer);
+				for (j = 0; j < 10; j++)
+				{
 					buffer[j] = 0;
 				}
 				i++;
 			}
-			// if(i=3){
-			// 	for(j=0;j<3;j++){
-			// 		if(strcmp(aux[j],buffer)==0){
-			// 			palavraErro = 0;
-			// 		}else{
-			// 			palavraErro = 1;
-			// 		}
-			// 	}
-			// }
 			t.pLinha = linha;
 			iniLexema = fimLexema;
+			if (i >= 3 && linha>1)
+			{
+				if (testarPalavra(buffer) != 1)
+				{
+					cout << "palavra com erro " << buffer << endl;
+					cout << "Linha " << t.pLinha << endl;
+					erro2 = 4;
+					imprimir(erro2,buffer,t.pLinha);
+				}
+				for (j = 0; j < 10; j++)
+				{
+					buffer[j] = 0;
+				}
+			}
 			return t;
 		//tratamento das aspas
 		case 89:

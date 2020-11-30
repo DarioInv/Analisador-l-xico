@@ -3,11 +3,44 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctype.h>
+#include <conio.h>
 
 using namespace std;
+int erro = 0;
+void arqsaida();
+void imprimir(int tipoErro, char vetorErro[100], int linhaErro){
+	FILE *arq;
+	arq = fopen("ArqResult2.txt", "a");
+	if(arq == NULL){
+		printf("Problema na criação de Arquivo\n");
+		return;
+	}
+	
+	switch (tipoErro)
+	{
+		case 0:
+			fprintf(arq,"Arquivo OK");
+			break;
+		case 1:
+			fprintf(arq,"Erro 'Parentese' linha = %d \n",linhaErro);
+			break;
+		case 2:
+			fprintf(arq,"Erro 'Chaves' linha = %d \n",linhaErro);
+			break;
+		case 3:
+			fprintf(arq,"Erro 'Aspas' linha = %d \n",linhaErro);
+			break;
+		case 4:
+			fprintf(arq,"Erro Palavra '%s' Não esta definido. esta na linha = %d \n",vetorErro,linhaErro);
+			break;
+	}
+
+	fclose(arq);
+}
 
 void R_Token()
 {
+	
 	token t;
 	int contC = 0;
 	int contA = 0; 
@@ -24,7 +57,7 @@ void R_Token()
 		{
 			case 0:	//cout << "Classe = "	 << "to" << endl; 
 				break;
-			case 1:	//cout << "Classe = "  << "if" << endl;	
+			case 1://	cout << "Classe = "  << "if" << endl;	
 				break;
 			case 2:	//cout << "Classe = "	 << "step" << endl;	
 				break;
@@ -84,7 +117,6 @@ void R_Token()
 				break;
 			case 26: 
 				//cout << "Classe = "<< "Identificadores"<< endl;
-				
 				break;
 			case 27:
 				contA = contA + 2;	
@@ -126,19 +158,7 @@ void R_Token()
 				primA = t.pLinha;
 				primA--;
 			}
-		}
-		// if(t.classe == 26){
-		// 	if(t.pLinha>1){
-		// 		if(palavraErro == 1){
-		// 			cout<<"erro"<<endl;
-		// 			cout<<"linha"<<t.pLinha<<endl;
-		// 		}else if(palavraErro == 0){
-		// 			cout<<" "<<endl;
-		// 		}
-		// 	}
-		// }
-			
-		 
+		}	 
 		// cout << "Lexema = " << t.valor << endl;
 		// cout << "Linha = " << t.pLinha << endl;
 		cout << endl;
@@ -148,22 +168,33 @@ void R_Token()
 	{
 		cout << "error linha = " << primP << endl;
 		cout << "Parentese" << endl;
+		erro = 1;
+		imprimir(erro,0,primP);
+		
 	}
 	if (contC % 2 == 1)
 	{
 		cout << "error linha = " << primC << endl;
 		cout << "Chaves" << endl;
+		erro = 2;
+		imprimir(erro,0,primC);
+		
 	}
 	if (contA % 2 == 1)
 	{
 		cout << "error linha = " << primA << endl;
 		cout << "Aspas" << endl;
-	}else {
+		erro = 3;
+		imprimir(erro,0,primA);
+	 }
+	else {
 		cout << "Arquivo ok "<< endl;
+		erro = 0;
+		imprimir(erro,0,0);
 	}
-	cout << aux[0] << endl;
-	cout << aux[1] << endl;
-	cout << aux[2] << endl;
-
+	// cout << aux[0] << endl;
+	// cout << aux[1] << endl;
+	// cout << aux[2] << endl;
+	
 	delete[] vetor;
 }

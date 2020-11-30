@@ -1,0 +1,6 @@
+Erro Palavra 'resultado' Não esta definido. esta na linha = 3 
+Erro Palavra 'resultado' Não esta definido. esta na linha = 11 
+Erro Palavra 'resultado' Não esta definido. esta na linha = 11 
+Erro Palavra 'resultado' Não esta definido. esta na linha = 16 
+Erro 'Chaves' linha = 9 
+Erro 'Aspas' linha = 5 
