@@ -1,10 +1,8 @@
 # Analisador-lexico
  trabalho AV2
 Aluno: Dário da Silva Invenção
-RA: 161030730
 Turma: teoria da computação e compiladores
 Faculdade Area 1.
-como
 tudo que esta comentado foi usado para testes, mas pode ser usado pra imprmir cada tokem com sua respectiva linha e valor.
 
 eu coloquei junto o analisador 1 e 4 que foram variações do codigo que n deram certo.
